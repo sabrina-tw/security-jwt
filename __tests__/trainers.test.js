@@ -42,4 +42,34 @@ describe("trainers", () => {
       expect(trainer.password).not.toBe(newTrainer.password);
     });
   });
+
+  describe("POST /login", () => {
+    it("should log user in if password is correct", async () => {
+      const trainer = {
+        username: "trainer1",
+        password: "password1",
+      };
+
+      const response = await request(app)
+        .post("/trainers/login")
+        .send(trainer)
+        .expect(200);
+
+      expect(response.text).toEqual("You are now logged in!");
+    });
+
+    it("should return error if password is incorrect", async () => {
+      const trainer = {
+        username: "trainer1",
+        password: "wrongpassword",
+      };
+
+      const response = await request(app)
+        .post("/trainers/login")
+        .send(trainer)
+        .expect(400);
+
+      expect(response.text).toContain("Login failed");
+    });
+  });
 });
